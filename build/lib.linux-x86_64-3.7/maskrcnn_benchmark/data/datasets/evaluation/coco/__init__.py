@@ -1,6 +1,6 @@
 from .coco_eval import do_coco_evaluation as do_orig_coco_evaluation
 from .coco_eval_wrapper import do_coco_evaluation as do_wrapped_coco_evaluation
-from maskrcnn_benchmark.data.datasets import AbstractDataset, COCODataset
+# from maskrcnn_benchmark.data.datasets import AbstractDataset, COCODataset
 
 
 def coco_evaluation(

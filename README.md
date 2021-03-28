@@ -41,6 +41,43 @@ A notebook with the demo can be found in [demo/Mask_R-CNN_demo.ipynb](demo/Mask_
 
 Check [INSTALL.md](INSTALL.md) for installation instructions.
 
+```
+#选择cuda:10.0，服务器25，38，在网络比较好的环境下安装：
+conda create -n maskrcnn python=3.7
+conda activate maskrcnn
+conda install ipykernel
+python -m ipykernel install --user --name maskrcnn
+pip install ninja yacs cython matplotlib tqdm -i https://pypi.tuna.tsinghua.edu.cn/simple 
+pip install opencv-python
+conda install pytorch==1.0.0 torchvision==0.2.1 cuda100 -c pytorch
+cd ~
+export INSTALL_DIR=$PWD
+cd $INSTALL_DIR
+git clone https://github.com/cocodataset/cocoapi.git
+cd cocoapi/PythonAPI
+make
+cd $INSTALL_DIR
+git clone https://github.com/NVIDIA/apex
+cd apex
+git checkout f3a960f80244cf9e80558ab30f7f7e8cbf03c0a0
+python setup.py install --cuda_ext --cpp_ext
+cd $INSTALL_DIR
+git clone https://github.com/facebookresearch/maskrcnn-benchmark.git
+cd maskrcnn-benchmark
+python setup.py build develop
+unset INSTALL_DIR
+conda install requests
+pip install cityscapesscripts
+```
+
+maskrcnn-benchmark -> demo -> maskecnndemo.ipynb
+code modify：
+* change the path
+```
+import os
+os.chdir("/home/mist/maskrcnn-benchmark")
+```
+* :module 'torch' has no attribute 'bool'：change from bool to uint8
 
 ## Model Zoo and Baselines
 

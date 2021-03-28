@@ -77,7 +77,7 @@ code modify：
 import os
 os.chdir("/home/mist/maskrcnn-benchmark")
 ```
-* :module 'torch' has no attribute 'bool'：change from bool to uint8
+* module 'torch' has no attribute 'bool'：change from bool to uint8
 
 ## Model Zoo and Baselines
 

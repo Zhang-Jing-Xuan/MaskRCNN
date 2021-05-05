@@ -42,7 +42,7 @@ A notebook with the demo can be found in [demo/Mask_R-CNN_demo.ipynb](demo/Mask_
 Check [INSTALL.md](INSTALL.md) for installation instructions.
 
 ```
-#选择cuda:10.0，服务器25，38，在网络比较好的环境下安装：
+# 选择cuda:10.0，在网络比较好的环境下安装：
 conda create -n maskrcnn python=3.7
 conda activate maskrcnn
 conda install ipykernel
@@ -50,6 +50,8 @@ python -m ipykernel install --user --name maskrcnn
 pip install ninja yacs cython matplotlib tqdm -i https://pypi.tuna.tsinghua.edu.cn/simple 
 pip install opencv-python
 conda install pytorch==1.0.0 torchvision==0.2.1 cuda100 -c pytorch
+或者
+(conda install pytorch==1.0.1 torchvision==0.2.2 cudatoolkit=10.0 -c pytorch)
 cd ~
 export INSTALL_DIR=$PWD
 cd $INSTALL_DIR
@@ -68,6 +70,25 @@ python setup.py build develop
 unset INSTALL_DIR
 conda install requests
 pip install cityscapesscripts
+pip install pycocotools
+# 官方demo实践
+# 项目数据准备（coco格式）
+# 配置文件准备
+cd maskrcnn-benchmark
+python weights/trim_detectron_model.py --pretrained_path weights/e2e_mask_rcnn_R_50_FPN_1x.pth --save_path weights/my_pretrained_R_50.pth
+python setup.py build develop
+python tools/train_net.py --config-file configs/my_e2e_mask_rcnn_R_50_FPN_1x.yaml MODEL.ROI_BOX_HEAD.NUM_CLASSES 6 SOLVER.IMS_PER_BATCH 4 SOLVER.BASE_LR 0.001 SOLVER.MAX_ITER 36000 SOLVER.STEPS "(24000, 32000)" TEST.IMS_PER_BATCH 1 MODEL.RPN.FPN_POST_NMS_TOP_N_TRAIN 2000
+
+
+
+# 算法指标/图片/视频测试
+cd maskrcnn-benchmark
+python tools/test_net.py --config-file configs/my_e2e_mask_rcnn_R_50_FPN_1x.yaml --ckpt weights/model_final.pth MODEL.ROI_BOX_HEAD.NUM_CLASSES 6
+
+python demo/seg_image.py --config-file configs/my_test_e2e_mask_rcnn_R_50_FPN_1x.yaml --input-file datasets/coco/val2017/img_val001.jpg --output-file demo/mypredictions.jpg
+
+python demo/seg_video.py --config-file configs/my_test_e2e_mask_rcnn_R_50_FPN_1x.yaml --input-file demo/drive.mp4
+
 ```
 
 maskrcnn-benchmark -> demo -> maskecnndemo.ipynb
